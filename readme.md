@@ -1,6 +1,6 @@
 # Viture WebHid Bridge
 
-Electron app using [viture-webxr-extension](https://github.com/bfvogel/viture-webxr-extension) in order to bridge Viture head tracking data to UDB receivers (Open Track/FaceTrackNoIr).
+Electron app using [viture-webxr-extension](https://github.com/bfvogel/viture-webxr-extension) to bridge Viture head tracking data to UDP receivers (Open Track/FaceTrackNoIr).
 
 Raw pitch, yaw and roll are provided as follows:
 
