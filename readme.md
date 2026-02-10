@@ -27,6 +27,8 @@ npm run build
 ```
 Then install using "VitureHidBridge Setup 1.0.0.exe"
 
+Will broadcast on port 5550.
+
 ## Compatability
 Should be compatable with:
 
