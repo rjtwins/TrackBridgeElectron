@@ -6,10 +6,12 @@ const FTNIR_HOST = "127.0.0.1";
 const FTNIR_PORT = 5550;
 const udp = dgram.createSocket("udp4");
 
+let selectedDevice = null;
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 400,
-    height: 200,
+    height: 400,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,   // easier for now
@@ -17,25 +19,36 @@ function createWindow() {
     }
   });
 
-  win.setContentSize(400, 200);
+  win.setContentSize(400, 400);
   win.maximizable = false;
   win.minimizable = true;
   win.resizable = false;
 
   win.menuBarVisible = false;
 
-  win.webContents.session.on('select-hid-device', (event, data, callback) => {
+  win.webContents.session.on('select-hid-device', async (event, data, callback) => {
     event.preventDefault();
-    console.log("Device list:", data);
+    //console.log("Device list:", data);
 
+    selectedDevice = null;
+    
     if (!data.deviceList || data.deviceList.length === 0) {
       console.log("No HID devices found");
       return;
     }
 
-    var deviceList = data.deviceList;
-    var device = deviceList[0];
-    callback(device.deviceId);
+    win.webContents.send('hid-device-list', data.deviceList);
+
+    while(selectedDevice === null) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    const deviceId = selectedDevice.deviceId;
+    selectedDevice = null;
+
+    console.log("Selected HID device ID:", deviceId);
+
+    callback(deviceId);
   });
 
   win.loadFile("public/index.html");
@@ -53,10 +66,14 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  
     ipcMain.on('send-tracking-data', processTrackingData);
+    ipcMain.on('send-device-selection', processDeviceSelection);
     createWindow();
 });
+
+function processDeviceSelection(event, device) {
+  selectedDevice = device;
+}
 
 function processTrackingData(event, r) {
     const buffer = new ArrayBuffer(48);

@@ -137,7 +137,7 @@ class VitureHID {
 
     const filters = VitureHID.ALL_PRODUCT_IDS.map(productId => ({
       vendorId: VitureHID.VENDOR_ID,
-      productId: productId
+      //productId: productId
     }));
 
     // Request device (user picks one)

@@ -16,20 +16,24 @@
 <button id="connectBtn">Connect Viture</button>
 <p id="status"></p>
 
+<div id="device-list" style="display: none;">
+</div>
+
 <script>
     document.getElementById("connectBtn")
         .addEventListener("click", connect);
 
     let current = {};
+    let currentInterval = null;
 
     async function connect() {
-        console.log(window.location.origin, " ",window.isSecureContext)
+        // console.log(window.location.origin, " ",window.isSecureContext)
 
         document.getElementById("status").textContent = "Connecting…";
         document.getElementById("status").textContent = "Waiting for headset…";
         let xr;
         try {
-            await withTimeout(window.connectViture(), 1000);
+            await window.connectViture();
             xr = window.VitureWebXR.getViture();
 
             console.log("XR Device: ", xr);
@@ -56,7 +60,11 @@
             current.roll = roll;
         });
 
-        setInterval(() => {
+        if(currentInterval !== null) {
+            clearInterval(currentInterval);
+        }
+        
+        currentInterval = setInterval(() => {
             sendTrackingData(0, 0, 50, current.yaw, current.pitch, current.roll);
         }, 20);
     }
@@ -74,6 +82,26 @@
         // Race the original promise against the timeout promise
         return Promise.race([promise, timeout]);
     };
+
+    window.electronAPI.onHidDeviceList((data, event) => {
+        console.log("HID Device List:", data);
+
+        const deviceList = document.getElementById("device-list");
+        deviceList.style.display = "block";
+        data.forEach(device => {
+            const btn = document.createElement("button");
+            btn.textContent = `${device.name} (ID: ${device.productId})`;
+
+            btn.addEventListener("click", () => {
+                window.electronAPI.sendDeviceSelection(device);
+                document.getElementById("status").textContent = `Selected device: ${device.name}`;
+                deviceList.innerHTML = "";
+                deviceList.style.display = "none";
+            });
+
+            deviceList.appendChild(btn);
+        });
+    })
 </script>
 </body>
 </html>
