@@ -152,8 +152,7 @@ class VitureHID {
     // After user authorizes, get ALL authorized Viture devices
     const allAuthorized = await navigator.hid.getDevices();
     const vitureDevices = allAuthorized.filter(d =>
-      d.vendorId === VitureHID.VENDOR_ID &&
-      VitureHID.ALL_PRODUCT_IDS.includes(d.productId)
+      d.vendorId === VitureHID.VENDOR_ID
     );
 
     console.log(`Viture: Found ${vitureDevices.length} authorized Viture device(s)`);
