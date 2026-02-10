@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Viture HID Bridge</title>
+    <script src="./viture-hid.js" ></script>
+    <script src="./webxr-polyfill.js" ></script>
+    <script src="./injected.js" ></script>
+</head>
+<body>
+<h1>Viture HID Bridge</h1>
+<button id="connectBtn">Connect Viture</button>
+<p id="status"></p>
+
+<script>
+    document.getElementById("connectBtn")
+        .addEventListener("click", connect);
+
+    let current = {};
+
+    async function connect() {
+        console.log(window.location.origin, " ",window.isSecureContext)
+
+        document.getElementById("status").textContent = "Connecting…";
+        document.getElementById("status").textContent = "Waiting for headset…";
+        let xr;
+        try {
+            await withTimeout(window.connectViture(), 1000);
+            xr = window.VitureWebXR.getViture();
+
+            console.log("XR Device: ", xr);
+
+            if(xr === null || xr === undefined) {
+                throw new Error("Viture headset not found");
+                return;
+            }
+        } catch (e) {
+            document.getElementById("status").textContent = "Failed to connect to Viture headset: " + e.message;
+            return;
+        }
+
+        document.getElementById("status").textContent = "Connected to " + xr.device.productName;
+
+        xr.onOrientationChangeRot(r => {
+            
+            const pitch = r.roll;
+            const yaw = r.pitch;
+            const roll = r.yaw;
+
+            current.yaw = yaw;
+            current.pitch = pitch;
+            current.roll = roll;
+        });
+
+        setInterval(() => {
+            sendTrackingData(0, 0, 50, current.yaw, current.pitch, current.roll);
+        }, 20);
+    }
+
+    function sendTrackingData(x, y, z, yaw, pitch, roll) {
+        window.electronAPI.sendTrackingData({x, y, z, yaw, pitch, roll});
+    }
+
+    const withTimeout = (promise, ms) => {
+        // Create a timeout promise that rejects after 'ms' milliseconds
+        const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Timeout exceeded")), ms)
+        );
+
+        // Race the original promise against the timeout promise
+        return Promise.race([promise, timeout]);
+    };
+</script>
+</body>
+</html>

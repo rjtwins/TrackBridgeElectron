@@ -1,0 +1,34 @@
+{
+  "name": "viture-hid-bridge",
+  "description": "Viture WebHID to OpenTrack/FaceTrackNoIr bridge",
+  "author": "Jorre Vedder",
+  "license": "MIT",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "dgram": "^1.0.1",
+    "ws": "^8.16.0"
+  },
+  "build": {
+    "appId": "com.jorre.viturehidbridge",
+    "productName": "VitureHidBridge",
+    "files": [
+        "main.js",
+        "preload.js",
+        "public/**/*"
+    ],
+    "win": {
+        "target": "nsis",
+        "icon": "assets/icon.ico"
+    },
+    "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true
+    }
+  }
+}
