@@ -30,7 +30,7 @@ Then install using "VitureHidBridge Setup 1.0.0.exe"
 Will broadcast on port 5550.
 
 ## Compatability
-Should be compatable with:
+Should be compatible with:
 
 ```
 Vendor Id: 0x35ca
