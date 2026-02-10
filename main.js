@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, contextBridge, ipcRenderer  } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, screen } = require("electron");
 const path = require("path");
 const dgram = require("dgram");
 
@@ -8,14 +8,19 @@ const udp = dgram.createSocket("udp4");
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 200,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,   // easier for now
       nodeIntegration: false     // keep renderer clean
     }
   });
+
+  win.setContentSize(400, 200);
+  win.maximizable = false;
+  win.minimizable = true;
+  win.resizable = false;
 
   win.menuBarVisible = false;
 
@@ -36,10 +41,19 @@ function createWindow() {
   win.loadFile("public/index.html");
 
   // Optional: DevTools
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools();
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith("http")) {
+      shell.openExternal(url);
+      return { action: "deny" };
+    }
+    return { action: "allow" };
+  });
 }
 
 app.whenReady().then(() => {
+  
     ipcMain.on('send-tracking-data', processTrackingData);
     createWindow();
 });
