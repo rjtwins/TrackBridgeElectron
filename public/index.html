@@ -47,9 +47,9 @@
 
         xr.onOrientationChangeRot(r => {
             
-            const pitch = r.roll;
+            const pitch = r.yaw;
             const yaw = r.pitch;
-            const roll = r.yaw;
+            const roll = r.roll;
 
             current.yaw = yaw;
             current.pitch = pitch;
