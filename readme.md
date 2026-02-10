@@ -16,8 +16,6 @@ byte 40–47 : roll  (float64, little-endian)
 ```
 
 ## Usage
-
-
 Run using npm
 ```bash
 npm install
@@ -29,9 +27,14 @@ npm run build
 ```
 Then install using "VitureHidBridge Setup 1.0.0.exe"
 
-## Compatability
-Should be compatible with:
+Plugin your device, click "Connect Viture" and select your device from the list.
 
+It should say "Connected to (your device name)" if its working.
+
+## Compatability
+Any Viture glasses that are interface with WebHid.
+
+For sure compatible with:
 ```
 Vendor Id: 0x35ca
 Name:               Product Ids:
