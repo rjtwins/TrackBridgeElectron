@@ -2,6 +2,8 @@
 
 Electron app using [viture-webxr-extension](https://github.com/bfvogel/viture-webxr-extension) to bridge Viture head tracking data to UDP receivers (Open Track/FaceTrackNoIr).
 
+Will broadcast on port 5550.
+
 Raw pitch, yaw and roll are provided as follows:
 
 ```
@@ -26,8 +28,6 @@ Build release artifacts:
 npm run build
 ```
 Then install using "VitureHidBridge Setup 1.0.0.exe"
-
-Will broadcast on port 5550.
 
 ## Compatability
 Should be compatible with:
