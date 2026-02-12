@@ -31,6 +31,10 @@ Plugin your device, click "Connect Viture" and select your device from the list.
 
 It should say "Connected to (your device name)" if its working.
 
+## Building for Linux
+
+https://www.electronjs.org/docs/latest/development/build-instructions-linux
+
 ## Compatability
 Any Viture glasses that are interface with WebHid.
 
